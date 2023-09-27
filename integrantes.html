@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37 | EVALUACIÓN Nº2</title>
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">Nicolás Cruzat</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="integrantes.html" selected>INTEGRANTES</option>
+                <option value="openweather.html">OPEN WEATHER</option>
+                <option value="picture.html">PICTURE OF THE DAY</option>
+                <option value="sismico.html">SÍSMICO</option>
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="Piscis" />Piscis</div>
+            <div><input type="radio" name="selecciona" value="Leo" />Leo</div>
+            <div><input type="radio" name="selecciona" value="Acuario" />Acuario</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/profesorfaco/dno037-2023-2/main/clase-07/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                console.log(datos);
+                signos = [];
+                datos.forEach((x) => {
+                    if(x.github !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                        signos.push(x.zodiaco.signo);
+                    }
+                });
+
+
+    const counts = {};
+    signos.forEach((x) => {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+    console.log(counts)
+
+
+
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                //Lo que sigue lo saqué de https://www.clara.es/
+
+                if (valor == "Piscis") {
+                    about =
+                        "<em>Los Piscis son místicos y soñadores. Su intuición no tiene límites pero también son contradictorios e indecisos como indica su símbolo: dos peces nadando en sentidos opuestos. El motivo es que los Piscis son capaces de una dualidad difícil de explicar, y tanto dejarse llevar por la corriente de manera pasiva y resignada como nadar en su contra y ascender hasta lo más profundo de las cosas a fuerza de voluntad. Todo esto hace que, a veces, cueste comprenderlos, que no sepas por dónde van. Pero no hay que desesperarse. Aunque son contradictorios y a veces parece que están en las nubes, refugiados en sus sueños, tarde o temprano regresan al mundo real y se enfrentan a él sin excusas.";
+                } else if (valor == "Leo") {
+                    about =
+                        "<em>Además de tener al león como representante, están regidos por el sol, el astro en torno al que giran el resto de todos los planetas. Por este motivo, los Leo suelen poseer un fuerte magnetismo que los hace sumamente atractivos y los coloca en el foco de atención de todas las miradas. Son coquetos y seductores y no hay nada que les alegre más el día que un halago sincero. Es como vitamina para su ego. Sin embargo, tienen mucho más que un irresistible poder de atracción. También son bondadosos e idealistas y muy protectores. Siempre dispuestos a iluminar con sus rayos y dar calor a todo el mundo. Aunque también es cierto que pueden llegar a ser arrogantes y orgullosos y pecar de cierto aire de superioridad cuando no logran canalizar adecuadamente su fuerte magnetismo.";
+                } else if (valor == "Acuario") {
+                    about =
+                        "<em>El causante de que un Acuario siempre mire hacia adelante no es otro que Urano, el planeta regente de este signo, que representa la ruptura con lo tradicional y el comienzo de lo nuevo. Esto hace que suelan ser espontáneos y algo impulsivos, y muy inclinados al cambio, la renovación, la evolución e, incluso, si es necesario... la revolución. Todo esto no significa que Acuario esté rompiendo esquemas y saltándose las reglas continuamente, sino que tiene la capacidad para comprender prácticamente todo con tolerancia y sin prejuicios, adaptarse a las circunstancias sean las que sean, y seguir hacia adelante sin volver la vista atrás.";
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.signo) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
